@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Auth from './pages/Auth/Auth';
-import Products from './pages/Products/Products';
-import NotFound from './pages/NotFound/NotFound';
+import Auth from './components/Auth/Auth';
+import Products from './components/Products/Products';
+import NotFound from './components/NotFound/NotFound';
 import pages from './utils/pages';
 import { useAuth } from './hooks';
 import './App.css';

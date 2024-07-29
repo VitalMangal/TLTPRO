@@ -9,7 +9,7 @@ import { useAuth } from '../../hooks/useContext.js';
 import pages from '../../utils/pages.js';
 import cn from 'classnames';
 
-// Выделить красным поля с ошибкой
+
 const AuthForm = () => {
 
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
@@ -17,10 +17,17 @@ const AuthForm = () => {
   const navigate = useNavigate();
   const inputRef = useRef();
   // const [authFailed, setAuthFailed] = useState(false);
-  const [netError, setNetError] = useState(null);
-  const feedbackClasses = cn('text-red-500', 'text-xs', 'italic', {
+  //const [netError, setNetError] = useState(null);
+
+  const feedbackClasses = cn('mt-2', 'peer-invalid:visible', 'text-pink-600', 'text-sm', {
     hidden: !error, //&& !authFailed
   });
+
+// Выделить красным поля с ошибкой
+  const emailClasses = cn('bg-[#C9CFD8]', 'placeholder:text-[#888F99]', 'text-sm', 'text-zinc-900', 'pl-[10px]', 'py-[6px]', 'block', 'w-full', 'rounded-md', 'border', 'focus:border-[#C9CFD8]', 'focus:bg-transparent', 'outline-none',
+    //'disabled:bg-slate-50', 'disabled:text-slate-500', 'disabled:border-slate-200', 'disabled:shadow-none',
+    //'invalid:border-pink-500', 'invalid:text-pink-600', 'focus:invalid:border-pink-500', 'focus:invalid:ring-pink-500'
+  );
 
   const formSchema = yup.object().shape({
     email: yup.string().email().required().trim(),
@@ -39,7 +46,7 @@ const AuthForm = () => {
     validationSchema: formSchema,
     onSubmit: (values) => {
       //setAuthFailed(false);
-      setNetError(null);
+      //setNetError(null);
       loginUser(values)
         .unwrap()
         .then((response) => {
@@ -54,7 +61,7 @@ const AuthForm = () => {
         .catch((error) => {
           //setAuthFailed(true);
           console.log(error, 'error');
-          setNetError(error.data.error);
+          //setNetError(error.data.error);
           inputRef.current.select();
         });
     },
@@ -72,7 +79,7 @@ const AuthForm = () => {
           </label>
           <input
             placeholder='Почта'
-            className='bg-[#C9CFD8] placeholder:text-[#888F99] text-sm text-zinc-900 pl-[10px] py-[6px] block w-full rounded-md border focus:border-[#C9CFD8] focus:bg-transparent outline-none'
+            className={emailClasses}
             onChange={formik.handleChange}
             value={formik.values.email}
             name="email"
@@ -103,7 +110,7 @@ const AuthForm = () => {
             disabled={isLoading}
           />
         </div>
-        {netError ? <p className={feedbackClasses}>{netError}</p> : null}        
+        {error ? <p className={feedbackClasses}>{error.data.error}</p> : null}        
       </div>
       <div className='block mx-auto'>
         <button 
