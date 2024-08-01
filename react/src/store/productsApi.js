@@ -10,14 +10,6 @@ export const productsApi = createApi({
   }),
   endpoints: (builder) => ({
     getProducts: builder.query({
-      /*queryFn: async (arg) => {
-        try {
-          const response = await fetch(baseQuery);
-          return {data: await response.json() };
-        } catch (e) {
-          return { error: e.message };
-        }
-      }*/
       query: () => '',
     }),
     getProductById: builder.query({
