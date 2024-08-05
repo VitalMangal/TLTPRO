@@ -8,31 +8,37 @@ export const productsApi = createApi({
     baseUrl: routes.productsPath(),
     prepareHeaders: (headers) => getHeaders(headers),
   }),
+  tagTypes: ['Product'],
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: () => '',
+      providesTags: ['Product'],
     }),
     getProductById: builder.query({
-      query: (id) => id,
+      query: (id) => `${id}`,
+      providesTags: ['Product'],
     }),
     addProduct: builder.mutation({
       query: (product) => ({
         method: 'POST',
         body: product,
       }),
+      invalidatesTags: ['Product'],
     }),
-    editProduct: builder.mutation({
-      query: (id, product) => ({
-        url: id,
+    patchProduct: builder.mutation({
+      query: ({id, product}) => ({
+        url: `${id}`,
         method: 'PATCH',
         body: product,
       }),
+      invalidatesTags: ['Product'],
     }),
     removeProduct: builder.mutation({
       query: (id) => ({
-        url: id,
+        url: `${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Product'],
     }),
   }),
 });
@@ -41,6 +47,18 @@ export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useAddProductMutation,
-  useEditProductMutation,
+  usePatchProductMutation,
   useRemoveProductMutation,
 } = productsApi;
+
+/*
+(result) => result
+      ? [...result.map((prod) => ({type: 'Product', id: prod.id})), {type: 'Product', id: 'ADD'}, {type: 'Product', id: 'REMOVE'}]
+      : [{type: 'Product', id: 'ADD'}, {type: 'Product', id: 'REMOVE'}],
+
+[{type: 'Product', id: 'ADD'}],
+
+(result, error, { id }) => [{type: 'Product', id }],
+
+ [{type: 'Product', id: 'REMOVE'}],
+ */

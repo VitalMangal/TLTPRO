@@ -1,15 +1,15 @@
 import { useAuth } from '../../hooks/useContext.js';
 import { useGetUserQuery } from '../../store/usersApi.js';
-import React, { useState, useEffect } from 'react';
+//import React, { useState, useEffect } from 'react';
 
 const Sidebar = () => {
 	const auth = useAuth();
   const { data: usersData, error } = useGetUserQuery();
-
+/*
 	useEffect(() => {
 console.log(usersData, 'usersData');
   }, [usersData]);
-
+*/
 	return (
 		<div className='h-screen w-56 bg-slate-100 flex flex-col'>
 			<div className='flex items-center gap-1 justify-center py-3 text-slate-100 text-[32px] font-semibold mb-6 bg-gray-800 rounded-br-2xl'>

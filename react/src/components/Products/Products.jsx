@@ -6,7 +6,7 @@ import ProductsForm from './ProductsForm.jsx';
 
 import getModal from '../layouts/Modal/index.js';
 
-const renderModal = (modalInfo, closeModal) => {
+const renderModal = (modalInfo, openModal, closeModal) => {
   if (!modalInfo.type) {
     return null;
   }
@@ -14,6 +14,7 @@ const renderModal = (modalInfo, closeModal) => {
   return (
     <Component
       modalInfo={modalInfo}
+			openModal={openModal}
       closeModal={closeModal}
     />
   );
@@ -25,6 +26,7 @@ const Products = () => {
 	const { data:productsList = [], error: productError } = useGetProductsQuery();
 	
 	const [modalInfo, setModalInfo] = useState({ type: null, product: null });
+	const [searchString, setSearchString] = useState('');
 
   const openModal = (type, product = null) => {
 		setModalInfo({ type, product });
@@ -39,7 +41,7 @@ const Products = () => {
 				<div className="w-full flex justify-center">
 					<div className="container flex-initial max-w-5xl mt-[32px] mb-[62px]">
 						<div className="inputs-container h-14 flex flex-row justify-between">
-							<input type="text" className='w-60 h-7 bg-gray-200 rounded-lg' placeholder='  Поиск'/>
+							<input type="text" onChange={() => setSearchString} className='w-60 h-7 bg-gray-200 rounded-lg' placeholder='  Поиск'/>
 							<div className="flex flex-row justify-between gap-x-2.5">
 								<div className="flex flex-row w-[100px] h-10">
 									<button className='flex items-center justify-center w-[50px] h-full bg-slate-300 rounded-l-lg'>
@@ -58,13 +60,13 @@ const Products = () => {
 								</button>
 							</div>
 						</div>
-							<ProductsForm productsList={productsList} />
+							<ProductsForm productsList={productsList} openModal={openModal}/>
 						<div className="pagination">
 						</div>
 					</div>				
 				</div>
 			</div>
-			{renderModal(modalInfo, closeModal)}
+			{renderModal(modalInfo, openModal, closeModal)}
 		</>
 	);
 };
