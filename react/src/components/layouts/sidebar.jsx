@@ -5,11 +5,7 @@ import { useGetUserQuery } from '../../store/usersApi.js';
 const Sidebar = () => {
 	const auth = useAuth();
   const { data: usersData, error } = useGetUserQuery();
-/*
-	useEffect(() => {
-console.log(usersData, 'usersData');
-  }, [usersData]);
-*/
+
 	return (
 		<div className='h-screen w-56 bg-slate-100 flex flex-col'>
 			<div className='flex items-center gap-1 justify-center py-3 text-slate-100 text-[32px] font-semibold mb-6 bg-gray-800 rounded-br-2xl'>
@@ -71,10 +67,7 @@ console.log(usersData, 'usersData');
 			<div className='mt-auto p-5'>
 				<div className='flex space-x-2 mb-4'>
 					<span className='bg-gray-300 px-2 py-1 rounded text-sm'>
-						Админ
-					</span>
-					<span className='bg-gray-300 px-2 py-1 rounded text-sm'>
-						roles={['Админ', 'Пользователь']}
+						{usersData?.user?.roles.includes(1) ? 'Админ' : 'Пользователь'}
 					</span>
 				</div>
 				<div className='flex flex-row justify-between'>

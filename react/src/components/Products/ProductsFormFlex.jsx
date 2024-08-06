@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 import { useGetManufacturersQuery } from "../../store/manufacturersApi";
 
-const ProductsForm = ({productsList, openModal}) => {
+const ProductsFormFlex = ({productsList, openModal}) => {
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
-
+/*
   useEffect(() => {
     console.log(manufList, 'manufList');
     console.log(productsList, 'products');
   }, [productsList]);
 
-
+*/
 	return (
     <div className="flex flex-col gap-2.5">
-    	<div className="table-cap h-14">
+    	<div className="table-cap h-16">
 				<ul className='flex flex-row justify-between'>
-          <li className="w-[10%] text-center">Фото</li>
-          <li className="w-[30%] text-center">Название</li>
+          <li className="w-[9%] text-center">Фото</li>
+          <li className="w-[31%] text-center">Название</li>
           <li className="w-[10%] text-center">Количество</li>
           <li className="w-[30%] text-center">Производитель</li>
           <li className="w-[10%] text-center">Цена</li>
@@ -29,12 +29,12 @@ const ProductsForm = ({productsList, openModal}) => {
             if(!product) null;
             const { id, manufacturerId, name, photoUrl, price, quantity } = product;
             return(
-              <li key={id} className="w-full flex flex-row justify-between items-center gap-2.5 rounded-md even:bg-gray-200">
+              <li key={id} className="w-full h-20 flex flex-row justify-between items-center gap-2.5 rounded-md even:bg-gray-200">
                 <div onClick={() => openModal('view', product)} className="w-full flex flex-row justify-between items-center gap-2.5 rounded-md">
-                  <div className="w-[11%]">
+                  <div className="w-[9%] flex justify-center items-center">
                     <img className='w-14 h-14 object-cover rounded-lg' src={photoUrl} alt={name} />
                   </div>
-                  <div className="w-[34%] text-center text-wrap">{name}</div>
+                  <div className="w-[36%] text-center text-wrap">{name}</div>
                   <div className="w-[11%] text-center text-wrap">{quantity}</div>
                   <div className="w-[33%] text-center text-wrap">{manufList.find((item) => item.id === manufacturerId).name}</div>
                   <div className="w-[11%] text-center text-wrap">{price} р</div>
@@ -63,4 +63,4 @@ const ProductsForm = ({productsList, openModal}) => {
   )
 };
 
-export default ProductsForm;
+export default ProductsFormFlex;
