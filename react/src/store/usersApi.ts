@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import routes from '../utils/routes.js';
-import getToken from '../utils/getToken.js'
+import routes from '../utils/routes.ts';
+import getToken from '../utils/getToken.ts';
+import { IUserRequest, IUserResponse } from '../types/IUser.js';
 
 export const usersApi = createApi({
   reducerPath: 'users',
@@ -8,14 +9,14 @@ export const usersApi = createApi({
     baseUrl: routes.usersPath(),
   }),
   endpoints: (builder) => ({
-    getUser: builder.query({
+    getUser: builder.query<IUserResponse, undefined>({
       query: () => ({
         url: 'me',
         method: 'GET',
         headers: { 'authorization': `Token ${getToken()}` }
       }),
     }),
-    loginUser: builder.mutation({
+    loginUser: builder.mutation<IUserResponse, IUserRequest>({
       query: (userData) => ({
         url: 'login',
         method: 'POST',

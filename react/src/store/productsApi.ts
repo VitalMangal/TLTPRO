@@ -1,6 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import routes from '../utils/routes.js';
-import getHeaders from '../utils/getHeaders.js';
+import routes from '../utils/routes.ts';
+import getHeaders from '../utils/getHeaders.ts';
+import { 
+  IProductAdd, 
+  IProductResponse, 
+  IProductRequestParams, 
+  IProductPatch,
+  IProductResponseDelete,
+  IError,
+} from '../types/IProduct.ts';
 
 export const productsApi = createApi({
   reducerPath: 'products',
@@ -10,22 +18,30 @@ export const productsApi = createApi({
   }),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
-    getProducts: builder.query({
-      query: (body) => `${body}`,
+    getProducts: builder.query<IProductResponse[] | IError, IProductRequestParams>({
+      query: ({limit, page, q}: IProductRequestParams) => ({
+        url: '',
+        params: {
+          _limit: limit,
+          _page: page,
+          q: q,
+        }
+      }),
       providesTags: ['Product'],
     }),
-    getProductById: builder.query({
-      query: (id) => `${id}`,
+    getProductById: builder.query<IProductResponse | IError, number>({
+      query: (id: number) => `${id}`,
       providesTags: ['Product'],
     }),
-    addProduct: builder.mutation({
+    addProduct: builder.mutation<IProductResponse | IError, IProductAdd>({
       query: (product) => ({
+        url: ``,
         method: 'POST',
         body: product,
       }),
       invalidatesTags: ['Product'],
     }),
-    patchProduct: builder.mutation({
+    patchProduct: builder.mutation<IProductResponse | IError, IProductPatch>({
       query: ({id, product}) => ({
         url: `${id}`,
         method: 'PATCH',
@@ -33,7 +49,7 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ['Product'],
     }),
-    removeProduct: builder.mutation({
+    removeProduct: builder.mutation<IProductResponseDelete | IError, number>({
       query: (id) => ({
         url: `${id}`,
         method: 'DELETE',
@@ -50,15 +66,3 @@ export const {
   usePatchProductMutation,
   useRemoveProductMutation,
 } = productsApi;
-
-/*
-(result) => result
-      ? [...result.map((prod) => ({type: 'Product', id: prod.id})), {type: 'Product', id: 'ADD'}, {type: 'Product', id: 'REMOVE'}]
-      : [{type: 'Product', id: 'ADD'}, {type: 'Product', id: 'REMOVE'}],
-
-[{type: 'Product', id: 'ADD'}],
-
-(result, error, { id }) => [{type: 'Product', id }],
-
- [{type: 'Product', id: 'REMOVE'}],
- */

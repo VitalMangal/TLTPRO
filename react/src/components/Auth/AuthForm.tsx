@@ -1,26 +1,26 @@
-import React, {
-  useEffect, useRef, useState,
-} from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLoginUserMutation } from '../../store/index.js';
-import { useFormik } from 'formik';
+import { useLoginUserMutation } from '../../store/index.ts';
+import { useFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
-import { useAuth } from '../../hooks/useContext.js';
-import pages from '../../utils/pages.js';
+import { useAuth } from '../../hooks/useContext.ts';
+import pages from '../../utils/pages.ts';
 import cn from 'classnames';
 
+interface IAuthFormValues {
+  email: string,
+  password: string,
+}
 
 const AuthForm = () => {
 
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
   const auth = useAuth();
   const navigate = useNavigate();
-  const inputRef = useRef();
-  // const [authFailed, setAuthFailed] = useState(false);
-  //const [netError, setNetError] = useState(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const feedbackClasses = cn('mt-2', 'peer-invalid:visible', 'text-pink-600', 'text-sm', {
-    hidden: !error, //&& !authFailed
+    hidden: !error,
   });
 
 // Выделить красным поля с ошибкой
@@ -35,10 +35,12 @@ const AuthForm = () => {
   });
 
   useEffect(() => {
-    inputRef.current.focus();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
   
-  const formik = useFormik({
+  const formik: FormikProps<IAuthFormValues> = useFormik<IAuthFormValues>({
     initialValues: {
       email: '',
       password: '',
