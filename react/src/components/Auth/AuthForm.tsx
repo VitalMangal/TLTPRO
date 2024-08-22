@@ -1,21 +1,20 @@
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLoginUserMutation } from '../../store/index.ts';
 import { useFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
-import { useAuth } from '../../hooks/useContext.ts';
+// import { useAuth } from '../../hooks';
 import pages from '../../utils/pages.ts';
 import cn from 'classnames';
 
-interface IAuthFormValues {
-  email: string,
-  password: string,
-}
+import authContext from '../../context/AuthContext.ts';
+import { UserRequestType } from '../../types';
+import AuthError from './AuthError.tsx';
 
 const AuthForm = () => {
 
   const [loginUser, { isLoading, error }] = useLoginUserMutation();
-  const auth = useAuth();
+  const { logIn } = useContext(authContext);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -40,7 +39,7 @@ const AuthForm = () => {
     }
   }, []);
   
-  const formik: FormikProps<IAuthFormValues> = useFormik<IAuthFormValues>({
+  const formik: FormikProps<UserRequestType> = useFormik<UserRequestType>({
     initialValues: {
       email: '',
       password: '',
@@ -57,14 +56,14 @@ const AuthForm = () => {
           const { password, ...rest } = user; // Пароль лучше хранить только в базе данных
           const newData = { token, user: rest, userLoggedIn: true };
           console.log(newData, 'newData');
-          auth.logIn(newData);
+          logIn(newData);
           navigate(pages.main);
         })
         .catch((error) => {
           //setAuthFailed(true);
           console.log(error, 'error');
           //setNetError(error.data.error);
-          inputRef.current.select();
+          inputRef?.current?.select();
         });
     },
   });
@@ -112,7 +111,7 @@ const AuthForm = () => {
             disabled={isLoading}
           />
         </div>
-        {error ? <p className={feedbackClasses}>{error.data.error}</p> : null}        
+        <AuthError error={error} feedbackClasses={feedbackClasses}/>
       </div>
       <div className='block mx-auto'>
         <button 

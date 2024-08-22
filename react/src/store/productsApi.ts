@@ -8,7 +8,7 @@ import {
   IProductPatch,
   IProductResponseDelete,
   IError,
-} from '../types/IProduct.ts';
+} from '../types/Product.ts';
 
 export const productsApi = createApi({
   reducerPath: 'products',

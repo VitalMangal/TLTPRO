@@ -1,18 +1,21 @@
+import { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Auth from './components/Auth/Auth';
 import Products from './components/Products/Products';
 import NotFound from './components/NotFound/NotFound';
 import pages from './utils/pages';
-import { useAuth } from './hooks';
+//import { useAuth } from './hooks';
 import './App.css';
+
+import authContext from './context/AuthContext';
 
 //Добавить проверку ролей для доступа
 const PrivateRoute = ({ children }) => {
   const location = useLocation();
-  const auth = useAuth();
+	const { loggedIn } = useContext(authContext);
 
   return (
-    auth.loggedIn
+    loggedIn
       ? children
       : <Navigate to={pages.auth} state={{ from: location }} />
   );
@@ -20,10 +23,11 @@ const PrivateRoute = ({ children }) => {
 
 const MainRoute = () => {
   const location = useLocation();
-	const auth = useAuth();
+	const { loggedIn } = useContext(authContext);
+
 
   return (
-    auth.loggedIn
+    loggedIn
       ? <Navigate to={pages.products} state={{ from: location }} />
 			: <Navigate to={pages.auth} state={{ from: location }} />
   );
