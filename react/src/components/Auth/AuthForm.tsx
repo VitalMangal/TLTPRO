@@ -39,7 +39,7 @@ const AuthForm = () => {
     }
   }, []);
   
-  const formik: FormikProps<UserRequestType> = useFormik<UserRequestType>({
+  const formik: FormikProps<UserRequestType> = useFormik({
     initialValues: {
       email: '',
       password: '',

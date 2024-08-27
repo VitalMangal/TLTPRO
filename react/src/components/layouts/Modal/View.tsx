@@ -1,20 +1,14 @@
-import { useEffect } from "react";
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
+import { ViewModalComponentType, ViewModalInfoType } from '../../../types';
 
-
-const Remove = ({ modalInfo, openModal, closeModal }) => {
+const View: ViewModalComponentType = ({ modalInfo, closeModal }) => {
 
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
-  const { product } = modalInfo;
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    openModal('confirmRemove', product)
-  };
+  const { product } = modalInfo as ViewModalInfoType;
 
   return (
-    <div id="remove-modal" tabIndex="-1" 
+    <div id="remove-modal" tabIndex={-1}
       className="fixed flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full
       before:fixed before:w-full before:h-full before:top-0 before:right-0 before:left-0 before:z-49 before:bg-slate-400 before:bg-opacity-50
       ">
@@ -24,15 +18,12 @@ const Remove = ({ modalInfo, openModal, closeModal }) => {
             <span className="w-full text-center text-2xl font-bold">{product.name}</span>
             <span className="w-full text-left">Количество: {product.quantity}</span>
             <span className="w-full text-left">Цена: {product.price} р.</span>
-            <span className="w-full text-left text-pretty">Производитель: {manufList.find((item) => item.id === product.manufacturerId).name}</span>
+            <span className="w-full text-left text-pretty">Производитель: {manufList.find((item) => item.id === product.manufacturerId)?.name}</span>
           </div>
-          <form onSubmit={handleSubmit} className="p-4 md:p-5">
+          <form className="p-4 md:p-5">
             <div className="flex justify-end gap-3">
-              <button type="submit" className="font-medium rounded-lg text-xl px-4 py-2 text-center text-neutral-900 inline-flex items-center bg-slate-300 focus:ring-4 focus:outline-none focus:ring-neutral-500">
-                Удалить
-              </button>
               <button onClick={closeModal} type="button" className="font-medium rounded-lg text-xl px-4 py-2 text-center text-neutral-200 inline-flex items-center bg-neutral-700 focus:ring-4 focus:outline-none focus:ring-neutral-500">
-                Отмена
+                Закрыть
               </button>
             </div>
           </form>
@@ -41,4 +32,4 @@ const Remove = ({ modalInfo, openModal, closeModal }) => {
   );
 };
 
-export default Remove;
+export default View;

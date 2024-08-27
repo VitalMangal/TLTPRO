@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Auth from './components/Auth/Auth';
 import Products from './components/Products/Products';
@@ -10,7 +10,12 @@ import './App.css';
 import authContext from './context/AuthContext';
 
 //Добавить проверку ролей для доступа
-const PrivateRoute = ({ children }) => {
+type PrivateRouteProps = {
+  children: ReactNode
+}
+
+//Возможно слишком широкий список видов на выходе из функции
+const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const location = useLocation();
 	const { loggedIn } = useContext(authContext);
 

@@ -1,4 +1,4 @@
-export interface IManufacturersResponse {
+export type ManufacturersResponseType = {
   id: number,
   name: string,
 }

@@ -1,14 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../utils/routes.ts';
 import getHeaders from '../utils/getHeaders.ts';
-import { 
-  IProductAdd, 
-  IProductResponse, 
-  IProductRequestParams, 
-  IProductPatch,
-  IProductResponseDelete,
-  IError,
-} from '../types/Product.ts';
+import { ProductAddType, ProductErrorType, ProductPatchType, ProductRequestParams, ProductResponseDeleteType, ProductType } from '../types';
 
 export const productsApi = createApi({
   reducerPath: 'products',
@@ -18,8 +11,8 @@ export const productsApi = createApi({
   }),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
-    getProducts: builder.query<IProductResponse[] | IError, IProductRequestParams>({
-      query: ({limit, page, q}: IProductRequestParams) => ({
+    getProducts: builder.query<ProductType[], ProductRequestParams>({
+      query: ({limit, page, q}) => ({
         url: '',
         params: {
           _limit: limit,
@@ -29,11 +22,11 @@ export const productsApi = createApi({
       }),
       providesTags: ['Product'],
     }),
-    getProductById: builder.query<IProductResponse | IError, number>({
+    getProductById: builder.query<ProductType[], number>({
       query: (id: number) => `${id}`,
       providesTags: ['Product'],
     }),
-    addProduct: builder.mutation<IProductResponse | IError, IProductAdd>({
+    addProduct: builder.mutation<ProductType[], ProductAddType>({
       query: (product) => ({
         url: ``,
         method: 'POST',
@@ -41,7 +34,7 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ['Product'],
     }),
-    patchProduct: builder.mutation<IProductResponse | IError, IProductPatch>({
+    patchProduct: builder.mutation<ProductType[], ProductPatchType>({
       query: ({id, product}) => ({
         url: `${id}`,
         method: 'PATCH',
@@ -49,7 +42,7 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ['Product'],
     }),
-    removeProduct: builder.mutation<IProductResponseDelete | IError, number>({
+    removeProduct: builder.mutation<ProductResponseDeleteType, number>({
       query: (id) => ({
         url: `${id}`,
         method: 'DELETE',

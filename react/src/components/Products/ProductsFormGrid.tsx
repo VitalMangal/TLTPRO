@@ -1,6 +1,12 @@
 import { useGetManufacturersQuery } from "../../store/manufacturersApi";
+import { ProductType, ManufacturersResponseType, ProductsFormGridPropsType } from "../../types";
 
-const Card = ({product, manufList}) => {
+export type CardPropsType = {
+  product: ProductType,
+  manufList: ManufacturersResponseType[],
+};
+
+const Card = ({product, manufList}: CardPropsType) => {
 
   const { manufacturerId, name, photoUrl, price, quantity } = product;
 
@@ -13,7 +19,7 @@ const Card = ({product, manufList}) => {
         {name}
       </div>
       <div className="col-span-2 row-span-1 text-center text-lg truncate">
-        {manufList.find((item) => item.id === manufacturerId).name}
+        {manufList.find((item) => item.id === manufacturerId)?.name}
       </div>
       <div className="col-span-1 row-span-1 text-start">
         {quantity} шт
@@ -25,7 +31,7 @@ const Card = ({product, manufList}) => {
   )
 };
 
-const ProductsFormGrid = ({productsList, openModal}) => {
+const ProductsFormGrid = ({productsList}: ProductsFormGridPropsType) => {
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 	return (
     <div className="grid grid-cols-4 grid-rows-2 w-full h-full gap-2.5">

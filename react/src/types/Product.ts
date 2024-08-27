@@ -1,36 +1,49 @@
-export interface IError {
+import { OpenModalType } from "./Modals";
+
+export type ProductErrorType = {
   status: number,
   message: string,
 }
 
-export interface IProductResponse {
-  id: number,
+export type ProductType = {
+	id: number,
+	name: string,
+	quantity: number,
+	price: number, // хотя дб number
+	photoUrl: string, //
+	manufacturerId: number,
+};
+
+export type ProductAddType = {
   name: string,
   quantity: number,
   price: number,
-  image: any, // заменить
+  image: File, // заменить мб
   manufacturerId: number,
 }
 
-export interface IProductAdd {
-  name: string,
-  quantity: number,
-  price: number,
-  image: any, // заменить
-  manufacturerId: number,
-}
-
-export interface IProductRequestParams {
+export type ProductRequestParams = {
   limit: number,
   page: number,
   q: string,
 }
 
-export interface IProductPatch {
+export type ProductPatchType = {
   id: number,
-  product: IProductAdd,
+  product: ProductAddType,
 }
 
-export interface IProductResponseDelete {
+export type ProductResponseDeleteType = {
   message: string,
 }
+
+export type ProductsFormFlexPropsType = {
+  productsList: ProductType[],
+  openModal: OpenModalType,
+};
+
+export type ProductsFormGridPropsType = {
+  productsList: ProductType[],
+};
+
+

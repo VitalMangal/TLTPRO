@@ -1,45 +1,63 @@
-import { useRef, useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useRef } from 'react';
+import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
-import { useAddProductMutation } from '../../../store/productsApi.js';
-import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
-import PhotoElement from './PhotoElement.jsx';
+import { useAddProductMutation } from '../../../store/productsApi.ts';
+import { useGetManufacturersQuery } from '../../../store/manufacturersApi.ts';
+import PhotoElement from './PhotoElement.tsx';
+import { AddModalComponentType } from '../../../types';
 
 
 // Нужно стилизовать select (стрелочка и цвет placeholder)
+//проверить правильность ыввода текста ошибок
+// ввел строку .typeError('Введите число') - проверить работает ли она корректно
 const getSchema = () => {
   const schema = yup.object().shape({
     name: yup
       .string()
       .required('Это обязательное поле'),
     quantity: yup
-      .number('Введите число')
-      .required('Это обязательное поле'),
+      .number()
+      .required('Это обязательное поле')
+      .typeError('Введите число'),
     price: yup
-      .number('Введите число')
-      .required('Это обязательное поле'),
+      .number()
+      .required('Это обязательное поле')
+      .typeError('Введите число'),
   });
   return schema;
 };
 
-const Add = ({ closeModal }) => {
+export type AddFormValues = {
+  name: string,
+  quantity: number,
+  price: string,
+  manufacturerId: number,
+  image: File | null,
+}
+
+const Add: AddModalComponentType = ({ closeModal }) => {
   const imgRef = useRef();
 
   const [addProduct, { error }] = useAddProductMutation();
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
-
+/*
   const handleSubmit = async (values, actions) => {
-    values.manufacturerId = Number(values.manufacturerId);
-
-    console.log(values, 'add values');
+    values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
     const resp = await addProduct(values);
-    console.log(resp, 'add resp');
     closeModal();
     actions.resetForm();
   };
+*/
+  const initialValues: AddFormValues = {
+    name: '',
+    quantity: 0,
+    price: "",
+    manufacturerId: 0,
+    image: null,
+  }
 
   return (
-    <div id="add-modal" tabIndex="-1" 
+    <div id="add-modal" tabIndex={-1}
       className="fixed flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full
       before:fixed before:w-full before:h-full before:top-0 before:right-0 before:left-0 before:z-49 before:bg-slate-400 before:bg-opacity-50
       ">
@@ -51,14 +69,13 @@ const Add = ({ closeModal }) => {
           </div>
           <Formik
             validationSchema={getSchema()}
-            onSubmit={handleSubmit}
-            initialValues={{
-              name: '',
-              quantity: "",
-              price: "",
-              manufacturerId: "",
-              image: '',
+            onSubmit={async (values, actions) => {
+              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
+              await addProduct(values);
+              closeModal();
+              actions.resetForm();
             }}
+            initialValues={initialValues}
           >
             {({
               handleSubmit, handleChange, values, touched, errors, setFieldValue,
@@ -82,8 +99,8 @@ const Add = ({ closeModal }) => {
                   </div>
                   <div>
                       <label htmlFor="manufacturerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Производитель</label>
-                      <select required=""  name='manufacturerId' onChange={handleChange} id="manufacturerId" className="appearance-auto bg-violet-200 border text-gray-900 text-md rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 placeholder-gray-400">
-                        <option defaultValue>Компания</option>
+                      <select required name='manufacturerId' onChange={handleChange} id="manufacturerId" className="appearance-auto bg-violet-200 border text-gray-900 text-md rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 placeholder-gray-400">
+                        {/*<option defaultValue>Компания</option> необходимо определить значение по умолчанию*/ }
                          { manufList.map(({id, name}) => <option key={id} value={id}>{name}</option>) }
                       </select>
                       {errors.manufacturerId && touched.manufacturerId ? (<div className='text-red-600'>{errors.manufacturerId}</div>) : null}

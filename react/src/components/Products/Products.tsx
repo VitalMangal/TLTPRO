@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import Pagination from "@mui/material/Pagination";
 import cn from 'classnames';
-import { useGetProductsQuery } from "../../store/productsApi";
+import { useGetProductsQuery } from "../../store/productsApi.js";
 
-import Sidebar from '../layouts/sidebar.jsx';
-import ProductsFormGrid from './ProductsFormGrid.jsx';
-import ProductsFormFlex from './ProductsFormFlex.jsx';
+import Sidebar from '../layouts/sidebar.js';
+import ProductsFormGrid from './ProductsFormGrid.js';
+import ProductsFormFlex from './ProductsFormFlex.js';
 
 import getModal from '../layouts/Modal/index.js';
+import { ModalInfoType, OpenModalType, RenderModalType } from "../../types";
 
-const renderModal = (modalInfo, openModal, closeModal) => {
+const renderModal: RenderModalType = (modalInfo, openModal, closeModal) => {
   if (!modalInfo.type) {
     return null;
   }
@@ -23,28 +24,29 @@ const renderModal = (modalInfo, openModal, closeModal) => {
   );
 };
 const defaultPage = 1;
+
+
 //нужна тень на поисковой строке(мб при фокусе на ней)
 const Products = () => {
 	
-	const [modalInfo, setModalInfo] = useState({ type: null, product: null });
+	const [modalInfo, setModalInfo] = useState<ModalInfoType>({ type: null, product: null });
 	const [searchString, setSearchString] = useState('');
 	const [activePage, setActivePage] = useState(defaultPage);
 	const [pagesCount, setPagesCount] = useState(13);
-	const [productsForm, setProductsForm] = useState('Flex');
-  
-	const { data:productsList = [], error: productError, isSuccess } = useGetProductsQuery(`?_limit=8&_page=${activePage}&q=${searchString}`);
-	// Не знаю как получить количество товаров по запросу
-	const { data:fullProductsList = [], error: fullProductsListError, isSuccess: fullIsSuccess} = useGetProductsQuery(`?_limit=10000&_page=1&q=${searchString}`);
+	const [productsForm, setProductsForm] = useState<'Flex' | 'Grid'>('Flex');
+
+	const { data:productsList = [], error: productError, isSuccess } = useGetProductsQuery({limit: 8, page: activePage, q: searchString});
+	// Не знаю как получить количество товаров по запросу, тут костыль
+	const { data:fullProductsList = [], error: fullProductsListError, isSuccess: fullIsSuccess} = useGetProductsQuery({limit: 10000, page: 1, q: searchString});
 
   useEffect(() => {
-		console.log(productsList, 'productsList');
-		console.log(fullProductsList, 'fullProductsList');
-		if(fullProductsList === 0 || productsList === 0) {
-			setPagesCount(1);
-		}
-		setPagesCount(Math.ceil(fullProductsList.length / productsList.length));
-
-		console.log(pagesCount, 'pagesCount');
+				console.log(productsList, 'productsList');
+				console.log(fullProductsList, 'fullProductsList');
+				if(fullProductsList.length === 0) {
+					setPagesCount(1);
+				}
+				setPagesCount(Math.ceil(fullProductsList.length / 8));
+				console.log(pagesCount, 'pagesCount');
   }, [productsList, fullProductsList]);
 
 		const flexButtonClasses = cn('flex', 'items-center', 'justify-center', 'w-[50px]', 'h-full', 'rounded-l-lg', {
@@ -56,10 +58,10 @@ const Products = () => {
 			'bg-slate-300': productsForm === 'Flex',
 		});
 
-  const openModal = (type, product = null) => {
-		setModalInfo({ type, product });
-		console.log(modalInfo, 'modalInfo');
+  const openModal: OpenModalType = ({type, product}) => {
+		setModalInfo({ type, product } as ModalInfoType);
 	};
+
   const closeModal = () => setModalInfo({ type: null, product: null });
 
 	return (
@@ -83,14 +85,14 @@ const Products = () => {
 										</svg>
 									</button>
 								</div>
-								<button onClick={() => openModal('add')} className='w-32 h-10 bg-slate-300 rounded-lg text-lg'>
+								<button onClick={() => openModal({type: 'add', product: null})} className='w-32 h-10 bg-slate-300 rounded-lg text-lg'>
 									Добавить
 								</button>
 							</div>
 						</div>
 						{productsForm === 'Flex'
 						? <ProductsFormFlex productsList={productsList} openModal={openModal}/>
-						: <ProductsFormGrid productsList={productsList} openModal={openModal}/>
+						: <ProductsFormGrid productsList={productsList}/>
 					 }
 							<Pagination
 								className="flex justify-center mt-auto"

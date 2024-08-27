@@ -3,36 +3,40 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
 import { usePatchProductMutation } from '../../../store/productsApi.js';
-import PhotoElement from './PhotoElement.jsx';
+import PhotoElement from './PhotoElement.js';
+import { PatchModalComponentType, PatchModalInfoType } from '../../../types';
 
 
 // Нужно стилизовать select (стрелочка и цвет placeholder)
+//Проверить как работает .typeError('Введите число'),
 const getSchema = () => {
   const schema = yup.object().shape({
     name: yup
       .string()
       .required('Это обязательное поле'),
     quantity: yup
-      .number('Введите число')
-      .required('Это обязательное поле'),
+      .number()
+      .required('Это обязательное поле')
+      .typeError('Введите число'),
     price: yup
-      .number('Введите число')
-      .required('Это обязательное поле'),
+      .number()
+      .required('Это обязательное поле')
+      .typeError('Введите число'),
   });
   return schema;
 };
 
-const Patch = ({ modalInfo, closeModal }) => {
+const Patch: PatchModalComponentType = ({ modalInfo, closeModal }) => {
 
   const [patchProduct, { error }] = usePatchProductMutation();
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
-  const { product } = modalInfo;
+  const { product } = modalInfo as PatchModalInfoType;
 
   useEffect(() => {
     console.log(product, 'product patch');
   }, [product]);
-
+/*
   const handleSubmit = async (values, actions) => {
     values.manufacturerId = Number(values.manufacturerId);
     console.log(values, 'patch values');
@@ -41,9 +45,9 @@ const Patch = ({ modalInfo, closeModal }) => {
     closeModal();
     actions.resetForm();
   };
-
+*/
   return (
-    <div id="patch-modal" tabIndex="-1" 
+    <div id="patch-modal" tabIndex={-1} 
       className="fixed flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full
       before:fixed before:w-full before:h-full before:top-0 before:right-0 before:left-0 before:z-49 before:bg-slate-400 before:bg-opacity-50
       ">
@@ -55,7 +59,12 @@ const Patch = ({ modalInfo, closeModal }) => {
           </div>
           <Formik
             validationSchema={getSchema()}
-            onSubmit={handleSubmit}
+            onSubmit={async (values, actions) => {
+              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
+              await patchProduct({id: product.id, product: values});
+              closeModal();
+              actions.resetForm();
+            }}
             initialValues={{
               name: product.name,
               quantity: product.quantity,
@@ -87,9 +96,10 @@ const Patch = ({ modalInfo, closeModal }) => {
                   <div>
                       <label htmlFor="manufacturerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Производитель</label>
                       <select name='manufacturerId' onChange={handleChange} id="manufacturerId" className="appearance-auto bg-violet-200 border text-gray-900 text-md rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 placeholder-gray-400">
+                          {/* Проверить работоспособность selected */}
                           { manufList.map(({id, name}) => 
                           id === values.manufacturerId ?
-                          <option defaultValue key={id} value={id}>{name}</option> :
+                          <option selected key={id} value={id}>{name}</option> :
                           <option key={id} value={id}>{name}</option>
                             )
                           }

@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../utils/routes.ts';
 import getHeaders from '../utils/getHeaders.ts';
-import { IManufacturersResponse } from '../types/Manufacturers.ts';
+import { ManufacturersResponseType } from '../types';
 
 export const manufacturersApi = createApi({
   reducerPath: 'manufacturers',
@@ -10,7 +10,7 @@ export const manufacturersApi = createApi({
     prepareHeaders: (headers) => getHeaders(headers),
   }),
   endpoints: (builder) => ({
-    getManufacturers: builder.query<IManufacturersResponse[], undefined>({
+    getManufacturers: builder.query<ManufacturersResponseType[], void>({
       query: () => '',
     }),
   }),

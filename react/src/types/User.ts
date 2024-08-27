@@ -7,6 +7,7 @@ export type UserRequestType = {
 export type UserResponseType = {
   token: string, 
   user: {
+    name: string, // проверить наличие этго свойства
     id: number,
     email: string,
     password: string,

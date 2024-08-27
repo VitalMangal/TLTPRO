@@ -9,7 +9,7 @@ export const usersApi = createApi({
     baseUrl: routes.usersPath(),
   }),
   endpoints: (builder) => ({
-    getUser: builder.query<UserResponseType, undefined>({
+    getUser: builder.query<UserResponseType, void>({
       query: () => ({
         url: 'me',
         method: 'GET',
