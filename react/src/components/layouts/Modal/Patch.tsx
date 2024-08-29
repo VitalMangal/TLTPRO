@@ -59,12 +59,24 @@ const Patch: PatchModalComponentType = ({ modalInfo, closeModal }) => {
           </div>
           <Formik
             validationSchema={getSchema()}
+            onSubmit={ async(values, actions) => {
+              let formData = new FormData();
+              for (let value in values) {
+                //непонятная проблема с типом
+                formData.append(value, values[value]);
+              }
+              await patchProduct({id: product.id, product: formData});
+              closeModal();
+              actions.resetForm();
+            }}
+            /*
             onSubmit={async (values, actions) => {
               values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
               await patchProduct({id: product.id, product: values});
               closeModal();
               actions.resetForm();
             }}
+              */
             initialValues={{
               name: product.name,
               quantity: product.quantity,

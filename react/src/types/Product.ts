@@ -9,7 +9,7 @@ export type ProductType = {
 	id: number,
 	name: string,
 	quantity: number,
-	price: number, // хотя дб number
+	price: string, // хотя дб number
 	photoUrl: string, //
 	manufacturerId: number,
 };
@@ -17,8 +17,8 @@ export type ProductType = {
 export type ProductAddType = {
   name: string,
   quantity: number,
-  price: number,
-  image: File, // заменить мб
+  price: string,
+  image: File | null, // заменить мб
   manufacturerId: number,
 }
 
@@ -30,7 +30,7 @@ export type ProductRequestParams = {
 
 export type ProductPatchType = {
   id: number,
-  product: ProductAddType,
+  product: FormData,
 }
 
 export type ProductResponseDeleteType = {

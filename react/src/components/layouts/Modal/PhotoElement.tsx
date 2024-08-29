@@ -11,12 +11,14 @@ export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean
 }>>;
 
 export type PhotoElementPropsType ={
-  product: ProductType,
+  product?: ProductType,
   setFieldValue: SetFieldValue,
 };
 
 const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
   const [photo, setPhoto] = useState(product?.photoUrl || null);
+  const [namePhoto, setNamePhoto] = useState(product?.name || null);
+
 
   // в photo мб разные типы данных: string, если пришел урл и 
   if(photo) {
@@ -25,7 +27,7 @@ const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
         <img src={photo} className='w-14 h-14 object-cover'/>
         <div className ="w-max h-14 flex justify-end items-center gap-2">
           <span>
-            {'Название картинки'}
+            {namePhoto}
           </span>
           <button type='button' onClick={() => setPhoto(null)} >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -40,11 +42,14 @@ const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
   return(
     <div className ="w-full relative rounded-lg">
       <label className='flex flex-col justify-center items-center p-4'>
-        <input name='photoUrl' id='photoUrl' className="hidden" type="file" accept="image/*"
+        <input name='image' id='image' className="hidden" type="file" accept="image/*"
           onChange={(e) => {
+            if (e.currentTarget.files) {
+              setNamePhoto(e.currentTarget.files[0].name);
+              setFieldValue("image", e.currentTarget.files[0]);
+              }
             const fileReader = new FileReader();
             fileReader.onloadend = () => {
-                setFieldValue('image', fileReader.result);
                 setPhoto(fileReader.result as string); // здесь костыль, нужно разобраться с типом данных
             };
             if (!e.target.files) return;

@@ -48,6 +48,18 @@ const Add: AddModalComponentType = ({ closeModal }) => {
     actions.resetForm();
   };
 */
+/*
+работает отправка фото!!
+const handleSubmit = async(values: AddFormValues, actions: any) => {
+  let formData = new FormData();
+  for (let value in values) {
+    formData.append(value, values[value]);
+  }
+  await addProduct(formData);
+  closeModal();
+  actions.resetForm();
+}
+*/
   const initialValues: AddFormValues = {
     name: '',
     quantity: 0,
@@ -69,9 +81,13 @@ const Add: AddModalComponentType = ({ closeModal }) => {
           </div>
           <Formik
             validationSchema={getSchema()}
-            onSubmit={async (values, actions) => {
-              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
-              await addProduct(values);
+            onSubmit={ async(values, actions) => {
+              let formData = new FormData();
+              for (let value in values) {
+                //непонятная проблема с типом
+                formData.append(value, values[value]);
+              }
+              await addProduct(formData);
               closeModal();
               actions.resetForm();
             }}
@@ -107,6 +123,11 @@ const Add: AddModalComponentType = ({ closeModal }) => {
                   </div>
                   <div>
                     <label htmlFor="photo" className="block mb-2 text-sm font-medium text-gray-900">Фото</label>
+                    {/*<input id="file" name="file" type="file" accept="image/*" onChange={(event) => {
+                      if (event.currentTarget.files) {
+                      setFieldValue("image", event.currentTarget.files[0]);
+                      }
+                    }} />*/}
                     <PhotoElement setFieldValue={setFieldValue}/>
                   </div>
                 </div>
@@ -128,3 +149,13 @@ const Add: AddModalComponentType = ({ closeModal }) => {
 };
 
 export default Add;
+
+
+/* onSubmit
+{async (values, actions) => {
+              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
+              await addProduct(values);
+              closeModal();
+              actions.resetForm();
+            }}
+              */
