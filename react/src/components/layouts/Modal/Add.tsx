@@ -9,8 +9,7 @@ import getFormattingData from '../../../utils/getFormattingData.ts';
 
 
 // Нужно стилизовать select (стрелочка и цвет placeholder)
-//проверить правильность ыввода текста ошибок
-// ввел строку .typeError('Введите число') - проверить работает ли она корректно
+
 const getSchema = () => {
   const schema = yup.object().shape({
     name: yup
@@ -18,12 +17,10 @@ const getSchema = () => {
       .required('Это обязательное поле'),
     quantity: yup
       .number()
-      .required('Это обязательное поле')
-      .typeError('Введите число'),
+      .required('Это обязательное поле'),
     price: yup
       .number()
-      .required('Это обязательное поле')
-      .typeError('Введите число'),
+      .required('Это обязательное поле'),
   });
   return schema;
 };
@@ -95,7 +92,6 @@ const Add: AddModalComponentType = ({ closeModal }) => {
                   <div>
                       <label htmlFor="manufacturerId" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Производитель</label>
                       <select required name='manufacturerId' onChange={handleChange} id="manufacturerId" className="appearance-auto bg-violet-200 border text-gray-900 text-md rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 placeholder-gray-400">
-                        {/*<option defaultValue>Компания</option> необходимо определить значение по умолчанию*/ }
                          { manufList.map(({id, name}) => <option key={id} value={id}>{name}</option>) }
                       </select>
                       {errors.manufacturerId && touched.manufacturerId ? (<div className='text-red-600'>{errors.manufacturerId}</div>) : null}
@@ -113,8 +109,7 @@ const Add: AddModalComponentType = ({ closeModal }) => {
                     Создать
                   </button>
                 </div>
-
-          </Form>
+              </Form>
             )}
           </Formik>
         </div>

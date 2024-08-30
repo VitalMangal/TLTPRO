@@ -1,11 +1,12 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../utils/routes.ts';
 import getToken from '../utils/getToken.ts';
-import { UserRequestType, UserResponseType } from '../types';
+import { UserRequestType, UserResponseType, CustomizedFetchBaseQueryError } from '../types';
 
 export const usersApi = createApi({
   reducerPath: 'users',
-  baseQuery: fetchBaseQuery({
+  baseQuery:  <BaseQueryFn<string | FetchArgs, unknown, CustomizedFetchBaseQueryError, {}>>
+    fetchBaseQuery({
     baseUrl: routes.usersPath(),
   }),
   endpoints: (builder) => ({

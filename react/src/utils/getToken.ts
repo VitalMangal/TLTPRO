@@ -1,7 +1,9 @@
 import { getStorageItem } from './localStorageFunctions.ts';
 
 export default () => {
-  const userData = JSON.parse(getStorageItem());
-  const { token } = userData;
-  return token;
+  if(getStorageItem()) {
+    const userData = JSON.parse(getStorageItem() as string);
+    const { token } = userData;
+    return token;
+  }
 };

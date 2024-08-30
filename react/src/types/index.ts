@@ -4,3 +4,4 @@ export * from './User';
 export * from './Context';
 export * from './Modals';
 export * from './Errors';
+export * from './Routs';

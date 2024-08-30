@@ -4,12 +4,12 @@ import pages from '../../utils/pages';
 // Нужны классы, стилизация
 const NotFound = () => {
   return (
-    <>
-      <h1>Страница не найдена</h1>
+    <div className="w-screen h-screen flex flex-col justify-center items-center">
+      <h1 className="text-xl">Страница не найдена</h1>
         <p>
-          <Link to={pages.main}>Главная страница</Link>
+          <Link className="text-blue-600 text-xl no-underline hover:underline" to={pages.main}>Главная страница</Link>
         </p>
-    </>
+    </div>
 
   );
 };

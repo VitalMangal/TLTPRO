@@ -4,7 +4,7 @@ import { getStorageItem, setStorageItem, removeStorageItem } from '../utils/loca
 import { LogInUserDataType } from '../types';
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  // либо заменить на "as string"
+
   const userData = JSON.parse(getStorageItem() || '{}');
   const [loggedIn, setLoggedIn] = useState<boolean>(userData ? userData.userLoggedIn : false);
 

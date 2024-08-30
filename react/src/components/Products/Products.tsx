@@ -24,9 +24,8 @@ const renderModal: RenderModalType = (modalInfo, openModal, closeModal) => {
   );
 };
 const defaultPage = 1;
+const defaultProductsPerPage = 8;
 
-
-//нужна тень на поисковой строке(мб при фокусе на ней)
 const Products = () => {
 	
 	const [modalInfo, setModalInfo] = useState<ModalInfoType>({ type: null, product: null });
@@ -35,7 +34,7 @@ const Products = () => {
 	const [pagesCount, setPagesCount] = useState(13);
 	const [productsForm, setProductsForm] = useState<'Flex' | 'Grid'>('Flex');
 
-	const { data:productsList = [], error: productError, isSuccess } = useGetProductsQuery({limit: 8, page: activePage, q: searchString});
+	const { data:productsList = [], error: productError, isSuccess } = useGetProductsQuery({limit: defaultProductsPerPage, page: activePage, q: searchString});
 	// Не знаю как получить количество товаров по запросу, тут костыль
 	const { data:fullProductsList = [], error: fullProductsListError, isSuccess: fullIsSuccess} = useGetProductsQuery({limit: 10000, page: 1, q: searchString});
 
@@ -43,7 +42,7 @@ const Products = () => {
 				if(fullProductsList.length === 0) {
 					setPagesCount(1);
 				}
-				setPagesCount(Math.ceil(fullProductsList.length / 8));
+				setPagesCount(Math.ceil(fullProductsList.length / defaultProductsPerPage));
   }, [productsList, fullProductsList]);
 
 		const flexButtonClasses = cn('flex', 'items-center', 'justify-center', 'w-[50px]', 'h-full', 'rounded-l-lg', {
@@ -68,7 +67,7 @@ const Products = () => {
 				<div className="w-full flex justify-center">
 					<div className="container flex flex-col flex-initial justify-start max-w-5xl mt-16 mb-24">
 						<div className="inputs-container h-14 flex flex-row justify-between">
-							<input type="text" onChange={(e) => setSearchString(e.target.value)} value={searchString} className='w-60 h-7 bg-gray-200 rounded-lg' placeholder='  Поиск'/>
+							<input type="text" onChange={(e) => setSearchString(e.target.value)} value={searchString} className='w-60 h-7 bg-gray-200 rounded-lg hover:shadow-2xl' placeholder='  Поиск'/>
 							<div className="flex flex-row justify-between gap-x-2.5">
 								<div className="flex flex-row w-[100px] h-10">
 									<button onClick={() => setProductsForm('Flex')} className={flexButtonClasses}>

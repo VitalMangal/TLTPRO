@@ -19,7 +19,7 @@ export type ProductAddType = {
   name: string,
   quantity: number,
   price: string,
-  image: File | null, // заменить мб
+  image: File | null,
   manufacturerId: number,
 }
 
