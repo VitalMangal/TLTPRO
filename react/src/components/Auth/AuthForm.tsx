@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useLoginUserMutation } from '../../store/index.ts';
 import { useFormik, FormikProps } from 'formik';
 import * as yup from 'yup';
-// import { useAuth } from '../../hooks';
 import pages from '../../utils/pages.ts';
 import cn from 'classnames';
 

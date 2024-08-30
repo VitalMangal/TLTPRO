@@ -1,3 +1,4 @@
+import { ManufacturersResponseType } from "./Manufacturers";
 import { OpenModalType } from "./Modals";
 
 export type ProductErrorType = {
@@ -9,8 +10,8 @@ export type ProductType = {
 	id: number,
 	name: string,
 	quantity: number,
-	price: string, // хотя дб number
-	photoUrl: string, //
+	price: string,
+	photoUrl: string,
 	manufacturerId: number,
 };
 
@@ -44,6 +45,11 @@ export type ProductsFormFlexPropsType = {
 
 export type ProductsFormGridPropsType = {
   productsList: ProductType[],
+};
+
+export type CardPropsType = {
+  product: ProductType,
+  manufList: ManufacturersResponseType[],
 };
 
 

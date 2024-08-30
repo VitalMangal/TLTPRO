@@ -1,26 +1,12 @@
 import { useState } from "react";
-import { ProductType } from "../../../types";
+import { PhotoElementPropsType, ProductType } from "../../../types";
 import { FormikErrors } from "formik";
 
-export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<{
-  name: string;
-  quantity: number;
-  price: string;
-  manufacturerId: number;
-  image: string;
-}>>;
-
-export type PhotoElementPropsType ={
-  product?: ProductType,
-  setFieldValue: SetFieldValue,
-};
 
 const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
   const [photo, setPhoto] = useState(product?.photoUrl || null);
   const [namePhoto, setNamePhoto] = useState(product?.name || null);
 
-
-  // в photo мб разные типы данных: string, если пришел урл и 
   if(photo) {
     return(
       <div className ="w-full h-15 rounded-lg flex justify-between items-center">
@@ -50,7 +36,7 @@ const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
               }
             const fileReader = new FileReader();
             fileReader.onloadend = () => {
-                setPhoto(fileReader.result as string); // здесь костыль, нужно разобраться с типом данных
+                setPhoto(fileReader.result as string);
             };
             if (!e.target.files) return;
             fileReader.readAsDataURL(e.target.files[0]);

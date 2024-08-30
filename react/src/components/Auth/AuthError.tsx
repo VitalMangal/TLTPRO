@@ -4,14 +4,12 @@ const AuthError = ({error, feedbackClasses}: AuthErrorPropsType) => {
 
     if (error) {
       if ('status' in error) {
-        // you can access all properties of `FetchBaseQueryError` here
         const errMsg = 'error' in error ? error.error : JSON.stringify(error.data)
 
         return (
-          <p className={feedbackClasses}>{errMsg}</p>
+          <p className={feedbackClasses}>{errMsg + ' bla bla bla'}</p>
         )
       } 
-      // you can access all properties of `SerializedError` here
       return <div>{error.message}</div>
     }
    return null;

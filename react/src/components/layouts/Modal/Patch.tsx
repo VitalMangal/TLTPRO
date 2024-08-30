@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
 import { usePatchProductMutation } from '../../../store/productsApi.js';
 import PhotoElement from './PhotoElement.js';
-import { PatchModalComponentType, PatchModalInfoType } from '../../../types';
+import { PatchFormValuesType, PatchModalComponentType, PatchModalInfoType } from '../../../types';
+import getFormattingData from '../../../utils/getFormattingData.js';
 
 
 // Нужно стилизовать select (стрелочка и цвет placeholder)
@@ -36,16 +37,21 @@ const Patch: PatchModalComponentType = ({ modalInfo, closeModal }) => {
   useEffect(() => {
     console.log(product, 'product patch');
   }, [product]);
-/*
-  const handleSubmit = async (values, actions) => {
-    values.manufacturerId = Number(values.manufacturerId);
+
+  const handleSubmit = async(values: PatchFormValuesType) => {
+
     console.log(values, 'patch values');
-    const resp = await patchProduct({id: product.id, product: values});
-    console.log(resp, 'patch resp');
+    const newData = getFormattingData(values);
+    let formData = new FormData();
+
+    const keys = Object.keys(newData) as Array<keyof typeof newData>;
+    keys.forEach((key) => {
+    formData.append(key, newData[key] as keyof typeof newData);
+    });
+    const res = await patchProduct({id: product.id, product: formData});
     closeModal();
-    actions.resetForm();
-  };
-*/
+  }
+
   return (
     <div id="patch-modal" tabIndex={-1} 
       className="fixed flex top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-full max-h-full
@@ -59,24 +65,7 @@ const Patch: PatchModalComponentType = ({ modalInfo, closeModal }) => {
           </div>
           <Formik
             validationSchema={getSchema()}
-            onSubmit={ async(values, actions) => {
-              let formData = new FormData();
-              for (let value in values) {
-                //непонятная проблема с типом
-                formData.append(value, values[value]);
-              }
-              await patchProduct({id: product.id, product: formData});
-              closeModal();
-              actions.resetForm();
-            }}
-            /*
-            onSubmit={async (values, actions) => {
-              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
-              await patchProduct({id: product.id, product: values});
-              closeModal();
-              actions.resetForm();
-            }}
-              */
+            onSubmit={handleSubmit}
             initialValues={{
               name: product.name,
               quantity: product.quantity,

@@ -1,10 +1,11 @@
 import { useRef } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import { useAddProductMutation } from '../../../store/productsApi.ts';
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.ts';
 import PhotoElement from './PhotoElement.tsx';
-import { AddModalComponentType } from '../../../types';
+import { AddFormValuesType, AddModalComponentType } from '../../../types';
+import getFormattingData from '../../../utils/getFormattingData.ts';
 
 
 // Нужно стилизовать select (стрелочка и цвет placeholder)
@@ -27,43 +28,30 @@ const getSchema = () => {
   return schema;
 };
 
-export type AddFormValues = {
-  name: string,
-  quantity: number,
-  price: string,
-  manufacturerId: number,
-  image: File | null,
-}
-
 const Add: AddModalComponentType = ({ closeModal }) => {
   const imgRef = useRef();
 
   const [addProduct, { error }] = useAddProductMutation();
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
-/*
-  const handleSubmit = async (values, actions) => {
-    values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
-    const resp = await addProduct(values);
+
+  const handleSubmit = async(values: AddFormValuesType) => {
+
+    const newData = getFormattingData(values);
+    let formData = new FormData();
+
+    const keys = Object.keys(newData) as Array<keyof typeof newData>;
+    keys.forEach((key) => {
+    formData.append(key, newData[key] as keyof typeof newData);
+    });
+    const res = await addProduct(formData);
+    console.log(res, 'response add product')
     closeModal();
-    actions.resetForm();
-  };
-*/
-/*
-работает отправка фото!!
-const handleSubmit = async(values: AddFormValues, actions: any) => {
-  let formData = new FormData();
-  for (let value in values) {
-    formData.append(value, values[value]);
   }
-  await addProduct(formData);
-  closeModal();
-  actions.resetForm();
-}
-*/
-  const initialValues: AddFormValues = {
+
+  const initialValues: AddFormValuesType = {
     name: '',
     quantity: 0,
-    price: "",
+    price: '',
     manufacturerId: 0,
     image: null,
   }
@@ -81,16 +69,7 @@ const handleSubmit = async(values: AddFormValues, actions: any) => {
           </div>
           <Formik
             validationSchema={getSchema()}
-            onSubmit={ async(values, actions) => {
-              let formData = new FormData();
-              for (let value in values) {
-                //непонятная проблема с типом
-                formData.append(value, values[value]);
-              }
-              await addProduct(formData);
-              closeModal();
-              actions.resetForm();
-            }}
+            onSubmit={handleSubmit}
             initialValues={initialValues}
           >
             {({
@@ -123,11 +102,6 @@ const handleSubmit = async(values: AddFormValues, actions: any) => {
                   </div>
                   <div>
                     <label htmlFor="photo" className="block mb-2 text-sm font-medium text-gray-900">Фото</label>
-                    {/*<input id="file" name="file" type="file" accept="image/*" onChange={(event) => {
-                      if (event.currentTarget.files) {
-                      setFieldValue("image", event.currentTarget.files[0]);
-                      }
-                    }} />*/}
                     <PhotoElement setFieldValue={setFieldValue}/>
                   </div>
                 </div>
@@ -149,13 +123,3 @@ const handleSubmit = async(values: AddFormValues, actions: any) => {
 };
 
 export default Add;
-
-
-/* onSubmit
-{async (values, actions) => {
-              values.manufacturerId = Number(values.manufacturerId); //мб не нужен?
-              await addProduct(values);
-              closeModal();
-              actions.resetForm();
-            }}
-              */

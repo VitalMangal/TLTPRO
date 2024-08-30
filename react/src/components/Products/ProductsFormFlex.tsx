@@ -6,13 +6,10 @@ import { OpenModalType, ProductsFormFlexPropsType, ProductType } from "../../typ
 const ProductsFormFlex = ({productsList, openModal}: ProductsFormFlexPropsType) => {
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
-/*
   useEffect(() => {
     console.log(manufList, 'manufList');
-    console.log(productsList, 'products');
-  }, [productsList]);
+  })
 
-*/
 	return (
     <div className="flex flex-col gap-2.5">
     	<div className="table-cap h-16">
@@ -38,7 +35,7 @@ const ProductsFormFlex = ({productsList, openModal}: ProductsFormFlexPropsType) 
                   </div>
                   <div className="w-[36%] text-center text-wrap">{name}</div>
                   <div className="w-[11%] text-center text-wrap">{quantity}</div>
-                  <div className="w-[33%] text-center text-wrap">{manufList.find((item) => item.id === manufacturerId)?.name}</div>
+                  <div className="w-[33%] text-center text-wrap">{manufList.find((item) => item.id === Number(manufacturerId))?.name}</div>
                   <div className="w-[11%] text-center text-wrap">{price} р</div>
                 </div >                
                 <div className="flex flex-row h-10 w-[10%]">

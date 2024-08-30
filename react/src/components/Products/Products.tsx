@@ -40,13 +40,10 @@ const Products = () => {
 	const { data:fullProductsList = [], error: fullProductsListError, isSuccess: fullIsSuccess} = useGetProductsQuery({limit: 10000, page: 1, q: searchString});
 
   useEffect(() => {
-				console.log(productsList, 'productsList');
-				console.log(fullProductsList, 'fullProductsList');
 				if(fullProductsList.length === 0) {
 					setPagesCount(1);
 				}
 				setPagesCount(Math.ceil(fullProductsList.length / 8));
-				console.log(pagesCount, 'pagesCount');
   }, [productsList, fullProductsList]);
 
 		const flexButtonClasses = cn('flex', 'items-center', 'justify-center', 'w-[50px]', 'h-full', 'rounded-l-lg', {

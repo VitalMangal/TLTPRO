@@ -1,10 +1,6 @@
 import { useGetManufacturersQuery } from "../../store/manufacturersApi";
-import { ProductType, ManufacturersResponseType, ProductsFormGridPropsType } from "../../types";
+import { ProductType, ManufacturersResponseType, ProductsFormGridPropsType, CardPropsType } from "../../types";
 
-export type CardPropsType = {
-  product: ProductType,
-  manufList: ManufacturersResponseType[],
-};
 
 const Card = ({product, manufList}: CardPropsType) => {
 
@@ -19,7 +15,7 @@ const Card = ({product, manufList}: CardPropsType) => {
         {name}
       </div>
       <div className="col-span-2 row-span-1 text-center text-lg truncate">
-        {manufList.find((item) => item.id === manufacturerId)?.name}
+        {manufList.find((item) => item.id === Number(manufacturerId))?.name}
       </div>
       <div className="col-span-1 row-span-1 text-start">
         {quantity} шт

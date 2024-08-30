@@ -1,3 +1,4 @@
+import { FormikErrors } from "formik";
 import { ProductType } from "./Product";
 
 export type TypeOfModal = 'add' | 'remove' | 'confirmRemove' | 'patch' | 'view';
@@ -84,3 +85,32 @@ export type GenerateModalsType =
   | ViewModalComponentType;
 
 export type GetModelType = (modalName: TypeOfModal) => GenerateModalsType;
+
+export type AddFormValuesType = {
+  name: string,
+  quantity: number,
+  price: string,
+  manufacturerId: number,
+  image: File | null,
+}
+
+export type PatchFormValuesType = {
+  name: string,
+  quantity: number,
+  price: string,
+  manufacturerId: number,
+  image: File | string | null,
+}
+
+export type SetFieldValue = (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<{
+  name: string;
+  quantity: number;
+  price: string;
+  manufacturerId: number;
+  image: string;
+}>>;
+
+export type PhotoElementPropsType ={
+  product?: ProductType,
+  setFieldValue: SetFieldValue,
+};
