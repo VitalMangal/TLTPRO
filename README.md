@@ -1,5 +1,6 @@
 Тестовая задача для собеседования на
-позицию Web-разработчик (React) в компанию TLTPRO
+позицию Web-разработчик (React) в компанию TLTPRO.
+Ссылка на задание: https://docs.google.com/document/d/1M8sADzrv7yRjdd4uUqooz8MQlzKqgCyNz_vqENK00kk/edit
 
 ## Описание
 
