@@ -4,15 +4,11 @@ import Auth from './components/Auth/Auth';
 import Products from './components/Products/Products';
 import NotFound from './components/NotFound/NotFound';
 import pages from './utils/pages';
-import './App.css';
 
 import authContext from './context/AuthContext';
 import { PrivateRouteProps } from './types';
+import { ToastContainer } from 'react-toastify';
 
-//Добавить проверку ролей для доступа к хлебным крошкам
-
-
-//Возможно слишком широкий список видов на выходе из функции
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const location = useLocation();
 	const { loggedIn } = useContext(authContext);
@@ -37,18 +33,32 @@ const MainRoute = () => {
 
 function App() {
 	return (
-		<Router>
-			<Routes>
-				<Route path={pages.auth} element={<Auth />} />
-				<Route path={pages.main} element={<MainRoute />} />
-				<Route path={pages.products} element={
-					<PrivateRoute>
-						<Products />
-					</PrivateRoute>
-				} />
-				<Route path={pages.notFound} element={<NotFound />} />
-			</Routes>
-		</Router>
+		<>
+			<Router>
+				<Routes>
+					<Route path={pages.auth} element={<Auth />} />
+					<Route path={pages.main} element={<MainRoute />} />
+					<Route path={pages.products} element={
+						<PrivateRoute>
+							<Products />
+						</PrivateRoute>
+					} />
+					<Route path={pages.notFound} element={<NotFound />} />
+				</Routes>
+			</Router>
+			<ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+		</>		
 	);
 }
 

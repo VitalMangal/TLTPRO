@@ -1,15 +1,13 @@
 import { useContext } from 'react';
-import { useAuth } from '../../hooks/useContext.js';
 import { useGetUserQuery } from '../../store/usersApi.js';
 import AuthContext from '../../context/AuthContext.js';
-//import React, { useState, useEffect } from 'react';
 
 const Sidebar = () => {
 	const { logOut } = useContext(AuthContext);
-  const { data: usersData, error } = useGetUserQuery();
+  const { data: usersData } = useGetUserQuery();
 
 	return (
-		<div className='h-screen w-56 bg-slate-100 flex flex-col'>
+		<div className='h-screen xl:w-56 lg:w-48 bg-slate-100 flex flex-col'>
 			<div className='flex items-center gap-1 justify-center py-3 text-slate-100 text-[32px] font-semibold mb-6 bg-gray-800 rounded-br-2xl'>
 				Test
 				<svg
@@ -48,6 +46,7 @@ const Sidebar = () => {
 						/>
 					</svg>
 				</li>
+				{/*
 				<li className='pr-1 relative flex justify-between items-center text-slate-800 font-medium text-xl transition group'>
 					Алгоритмы
 					<svg
@@ -65,6 +64,7 @@ const Sidebar = () => {
 						/>
 					</svg>
 				</li>
+				*/}
 			</ul>
 			<div className='mt-auto p-5'>
 				<div className='flex space-x-2 mb-4'>

@@ -63,7 +63,6 @@ export const addProduct = async (req, res) => {
 				photoUrl: `http://localhost:3002/${req?.file?.filename}`,
 			})
 			.write();
-
 		res.json(product);
 	} catch (err) {
 		console.log(err);

@@ -1,13 +1,18 @@
 import { useEffect } from "react";
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
 import { RemoveModalComponentType, RemoveModalInfoType } from "../../../types";
-
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../../utils/getErrorMessage.ts';
 
 const Remove: RemoveModalComponentType = ({ modalInfo, openModal, closeModal }) => {
 
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
   const { product } = modalInfo as RemoveModalInfoType;
+
+  useEffect(() => {
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [ manufError]);
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();

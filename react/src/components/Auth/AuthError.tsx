@@ -1,16 +1,11 @@
 import { AuthErrorPropsType } from "../../types";
+import GetErrorMessage from "../../utils/getErrorMessage";
 
 const AuthError = ({error, feedbackClasses}: AuthErrorPropsType) => {
 
     if (error) {
-      if ('status' in error) {
-        const errMsg = 'message' in error ? error.message : error.data.error;
-
-        return (
-          <p className={feedbackClasses}>{errMsg}</p>
-        )
-      } 
-      return <div>{error.message}</div>
+      const errorMsg = GetErrorMessage(error);
+      return <p className={feedbackClasses}>{errorMsg}</p>
     }
    return null;
 };

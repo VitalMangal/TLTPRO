@@ -1,5 +1,8 @@
 import { useGetManufacturersQuery } from "../../store/manufacturersApi";
-import { ProductType, ManufacturersResponseType, ProductsFormGridPropsType, CardPropsType } from "../../types";
+import { ProductsFormGridPropsType, CardPropsType } from "../../types";
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../utils/getErrorMessage.ts';
+import { useEffect } from "react";
 
 
 const Card = ({product, manufList}: CardPropsType) => {
@@ -29,18 +32,23 @@ const Card = ({product, manufList}: CardPropsType) => {
 
 const ProductsFormGrid = ({productsList}: ProductsFormGridPropsType) => {
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
+
+  useEffect(() => {
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [manufError]);
+  
 	return (
     <div className="grid grid-cols-4 grid-rows-2 w-full h-full gap-2.5">
 			{productsList.map(product => {
-            if(!product) null;
-            return(
-              <Card 
-                key={product.id}
-                product={product}
-                manufList={manufList}
-              />
-            )
-          })}
+        if(!product) null;
+        return(
+          <Card 
+            key={product.id}
+            product={product}
+            manufList={manufList}
+          />
+        )
+      })}
     </div>
 
   )

@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { PhotoElementPropsType, ProductType } from "../../../types";
-import { FormikErrors } from "formik";
-
+import { PhotoElementPropsType } from "../../../types";
 
 const PhotoElement = ({product, setFieldValue}: PhotoElementPropsType) => {
   const [photo, setPhoto] = useState(product?.photoUrl || null);

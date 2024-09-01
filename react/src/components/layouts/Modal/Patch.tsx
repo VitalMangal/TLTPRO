@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
 import { usePatchProductMutation } from '../../../store/productsApi.js';
 import PhotoElement from './PhotoElement.js';
 import { PatchFormValuesType, PatchModalComponentType, PatchModalInfoType } from '../../../types';
 import getFormattingData from '../../../utils/getFormattingData.js';
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../../utils/getErrorMessage.ts';
 
-
-// Нужно стилизовать select (стрелочка и цвет placeholder)
 const getSchema = () => {
   const schema = yup.object().shape({
     name: yup
@@ -32,20 +32,20 @@ const Patch: PatchModalComponentType = ({ modalInfo, closeModal }) => {
   const { product } = modalInfo as PatchModalInfoType;
 
   useEffect(() => {
-    console.log(product, 'product patch');
-  }, [product]);
+    if (error) toast.error(GetErrorMessage(error));
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [error, manufError]);
 
   const handleSubmit = async(values: PatchFormValuesType) => {
-
-    console.log(values, 'patch values');
     const newData = getFormattingData(values);
-    let formData = new FormData();
+    const formData = new FormData();
 
     const keys = Object.keys(newData) as Array<keyof typeof newData>;
     keys.forEach((key) => {
     formData.append(key, newData[key] as keyof typeof newData);
     });
-    const res = await patchProduct({id: product.id, product: formData});
+    await patchProduct({id: product.id, product: formData});
+    toast.success('Информация о товаре успешно обновлена');
     closeModal();
   }
 

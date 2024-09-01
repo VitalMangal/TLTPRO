@@ -1,14 +1,15 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import routes from '../utils/routes.ts';
 import getHeaders from '../utils/getHeaders.ts';
-import { ProductAddType, ProductErrorType, ProductPatchType, ProductRequestParams, ProductResponseDeleteType, ProductType } from '../types';
+import { CustomizedFetchBaseQueryError, ProductPatchType, ProductRequestParams, ProductResponseDeleteType, ProductType } from '../types';
 
 export const productsApi = createApi({
   reducerPath: 'products',
-  baseQuery: fetchBaseQuery({
-    baseUrl: routes.productsPath(),
-    prepareHeaders: (headers) => getHeaders(headers),
-  }),
+  baseQuery: <BaseQueryFn<string | FetchArgs, unknown, CustomizedFetchBaseQueryError, {}>>
+    fetchBaseQuery({
+      baseUrl: routes.productsPath(),
+      prepareHeaders: (headers) => getHeaders(headers),
+    }),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
     getProducts: builder.query<ProductType[], ProductRequestParams>({

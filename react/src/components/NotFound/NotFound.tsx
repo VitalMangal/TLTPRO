@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import pages from '../../utils/pages';
 
-// Нужны классы, стилизация
 const NotFound = () => {
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center">

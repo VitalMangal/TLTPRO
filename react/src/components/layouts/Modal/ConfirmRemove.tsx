@@ -1,17 +1,23 @@
 import { useRemoveProductMutation } from '../../../store/productsApi';
 import { ConfirmModalComponentType, ConfirmRemoveModalInfoType } from '../../../types';
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../../utils/getErrorMessage.ts';
+import { useEffect } from 'react';
 
 const ConfirmRemove: ConfirmModalComponentType = ({ modalInfo, closeModal }) => {
 
   const [removeProduct, { error }] = useRemoveProductMutation();
 
+  useEffect(() => {
+    if (error) toast.error(GetErrorMessage(error));
+  }, [error]);
+  
   const { product } = modalInfo as ConfirmRemoveModalInfoType;
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log(product.id, 'remove product.id')
-    const resp = await removeProduct(product.id);
-    console.log(resp, 'remove resp');
+    await removeProduct(product.id);
+    toast.success('Информация о товаре успешно удалена');
     closeModal();
   };
 

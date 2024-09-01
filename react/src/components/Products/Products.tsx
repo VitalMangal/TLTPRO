@@ -9,6 +9,8 @@ import ProductsFormFlex from './ProductsFormFlex.js';
 
 import getModal from '../layouts/Modal/index.js';
 import { ModalInfoType, OpenModalType, RenderModalType } from "../../types";
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../utils/getErrorMessage.ts';
 
 const renderModal: RenderModalType = (modalInfo, openModal, closeModal) => {
   if (!modalInfo.type) {
@@ -34,9 +36,12 @@ const Products = () => {
 	const [pagesCount, setPagesCount] = useState(13);
 	const [productsForm, setProductsForm] = useState<'Flex' | 'Grid'>('Flex');
 
-	const { data:productsList = [], error: productError, isSuccess } = useGetProductsQuery({limit: defaultProductsPerPage, page: activePage, q: searchString});
-	// Не знаю как получить количество товаров по запросу, тут костыль
-	const { data:fullProductsList = [], error: fullProductsListError, isSuccess: fullIsSuccess} = useGetProductsQuery({limit: 10000, page: 1, q: searchString});
+	const { data:productsList = [], error: productError } = useGetProductsQuery({limit: defaultProductsPerPage, page: activePage, q: searchString});
+	const { data:fullProductsList = []} = useGetProductsQuery({limit: 10000, page: 1, q: searchString});
+
+	useEffect(() => {
+    if (productError) toast.error(GetErrorMessage(productError));
+  }, [productError]);
 
   useEffect(() => {
 				if(fullProductsList.length === 0) {

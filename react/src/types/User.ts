@@ -1,4 +1,3 @@
-// учесть ошибку
 export type UserRequestType = {
   email: string,
   password: string,

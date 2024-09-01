@@ -1,5 +1,4 @@
 import { SerializedError } from "@reduxjs/toolkit";
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export type CustomizedFetchBaseQueryError = {
   status: number,
@@ -11,7 +10,9 @@ export type CustomizedFetchBaseQueryError = {
   message: string,
 };
 
+export type RTKQueryErrorType = CustomizedFetchBaseQueryError | SerializedError;
+
 export type AuthErrorPropsType = {
-  error: CustomizedFetchBaseQueryError | SerializedError | undefined,
+  error: RTKQueryErrorType | undefined,
   feedbackClasses: string,
 };

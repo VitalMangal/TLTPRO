@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useGetManufacturersQuery } from "../../store/manufacturersApi";
-import { OpenModalType, ProductsFormFlexPropsType, ProductType } from "../../types";
+import { ProductsFormFlexPropsType } from "../../types";
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../utils/getErrorMessage.ts';
 
 
 const ProductsFormFlex = ({productsList, openModal}: ProductsFormFlexPropsType) => {
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
-  useEffect(() => {
-    console.log(manufList, 'manufList');
-  })
+	useEffect(() => {
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [manufError]);
 
 	return (
     <div className="flex flex-col gap-2.5">

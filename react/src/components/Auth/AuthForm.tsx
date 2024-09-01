@@ -21,11 +21,7 @@ const AuthForm = () => {
     hidden: !error,
   });
 
-// Выделить красным поля с ошибкой
-  const emailClasses = cn('bg-[#C9CFD8]', 'placeholder:text-[#888F99]', 'text-sm', 'text-zinc-900', 'pl-[10px]', 'py-[6px]', 'block', 'w-full', 'rounded-md', 'border', 'focus:border-[#C9CFD8]', 'focus:bg-transparent', 'outline-none',
-    //'disabled:bg-slate-50', 'disabled:text-slate-500', 'disabled:border-slate-200', 'disabled:shadow-none',
-    //'invalid:border-pink-500', 'invalid:text-pink-600', 'focus:invalid:border-pink-500', 'focus:invalid:ring-pink-500'
-  );
+  const emailClasses = cn('bg-[#C9CFD8]', 'placeholder:text-[#888F99]', 'text-sm', 'text-zinc-900', 'pl-[10px]', 'py-[6px]', 'block', 'w-full', 'rounded-md', 'border', 'focus:border-[#C9CFD8]', 'focus:bg-transparent', 'outline-none');
 
   const formSchema = yup.object().shape({
     email: yup.string().email().required().trim(),
@@ -45,23 +41,17 @@ const AuthForm = () => {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      //setAuthFailed(false);
-      //setNetError(null);
       loginUser(values)
         .unwrap()
         .then((response) => {
-          console.log(response, 'response');
           const { token, user } = response;
           const { password, ...rest } = user; // Пароль лучше хранить только в базе данных
           const newData = { token, user: rest, userLoggedIn: true };
-          console.log(newData, 'newData');
           logIn(newData);
           navigate(pages.main);
         })
         .catch((error) => {
-          //setAuthFailed(true);
           console.log(error, 'error');
-          //setNetError(error.data.error);
           inputRef?.current?.select();
         });
     },
@@ -85,7 +75,6 @@ const AuthForm = () => {
             name="email"
             id="email"
             autoComplete="email"
-            //isInvalid={authFailed}
             required
             ref={inputRef}
             type="email"
@@ -106,7 +95,6 @@ const AuthForm = () => {
             type="password"
             autoComplete="current-password"
             required
-            //isInvalid={authFailed}
             disabled={isLoading}
           />
         </div>

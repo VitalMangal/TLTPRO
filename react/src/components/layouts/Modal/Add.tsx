@@ -1,14 +1,13 @@
-import { useRef } from 'react';
-import { Formik, Form, Field, FormikHelpers } from 'formik';
+import { useEffect } from 'react';
+import { Formik, Form, Field } from 'formik';
 import * as yup from 'yup';
 import { useAddProductMutation } from '../../../store/productsApi.ts';
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.ts';
 import PhotoElement from './PhotoElement.tsx';
 import { AddFormValuesType, AddModalComponentType } from '../../../types';
 import getFormattingData from '../../../utils/getFormattingData.ts';
-
-
-// Нужно стилизовать select (стрелочка и цвет placeholder)
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../../utils/getErrorMessage.ts';
 
 const getSchema = () => {
   const schema = yup.object().shape({
@@ -26,22 +25,26 @@ const getSchema = () => {
 };
 
 const Add: AddModalComponentType = ({ closeModal }) => {
-  const imgRef = useRef();
 
   const [addProduct, { error }] = useAddProductMutation();
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
 
+  useEffect(() => {
+    if (error) toast.error(GetErrorMessage(error));
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [error, manufError]);
+
   const handleSubmit = async(values: AddFormValuesType) => {
 
     const newData = getFormattingData(values);
-    let formData = new FormData();
+    const formData = new FormData();
 
     const keys = Object.keys(newData) as Array<keyof typeof newData>;
     keys.forEach((key) => {
     formData.append(key, newData[key] as keyof typeof newData);
     });
-    const res = await addProduct(formData);
-    console.log(res, 'response add product')
+    await addProduct(formData);
+    toast.success('Информация о товаре успешно добавлена');
     closeModal();
   }
 
@@ -70,7 +73,7 @@ const Add: AddModalComponentType = ({ closeModal }) => {
             initialValues={initialValues}
           >
             {({
-              handleSubmit, handleChange, values, touched, errors, setFieldValue,
+              handleSubmit, handleChange, touched, errors, setFieldValue,
             }) => (
               <Form onSubmit={handleSubmit} className="p-4 md:p-5">
                 <div className="flex flex-col gap-4 text-md">

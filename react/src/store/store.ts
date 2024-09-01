@@ -16,7 +16,3 @@ export const store = configureStore({
     .concat(manufacturersApi.middleware)
     .concat(productsApi.middleware)
 });
-
-// Нужно проерить их необходимость
-export type RootState = ReturnType<typeof rootReducer>
-//export type AppStore = ReturnType<typeof setupStore>

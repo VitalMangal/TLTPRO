@@ -1,9 +1,16 @@
 import { useGetManufacturersQuery } from '../../../store/manufacturersApi.js';
 import { ViewModalComponentType, ViewModalInfoType } from '../../../types';
+import { toast } from 'react-toastify';
+import GetErrorMessage from '../../../utils/getErrorMessage.ts';
+import { useEffect } from 'react';
 
 const View: ViewModalComponentType = ({ modalInfo, closeModal }) => {
 
   const { data: manufList = [], error: manufError } = useGetManufacturersQuery();
+
+  useEffect(() => {
+    if (manufError) toast.error(GetErrorMessage(manufError));
+  }, [ manufError]);
 
   const { product } = modalInfo as ViewModalInfoType;
 
